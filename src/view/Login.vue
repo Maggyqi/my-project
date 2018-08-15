@@ -17,6 +17,7 @@
     </div>
 </template>
 <script>
+import {getLogin} from '../api/index.js'
 export default {
   data() {
     return {
@@ -30,7 +31,7 @@ export default {
           ],
           password: [
             { required: true, message: '请输入密码', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
           ]
       }
     }
@@ -39,9 +40,11 @@ export default {
     submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            // alert('submit!');
-            console.log('成功');
-            
+            getLogin(this.form)
+            .then(res=>{
+              localStorage.setItem('mytoken',res.data.token)
+              this.$router.push('/')
+            })
           } else {
             console.log('error submit!!');
             return false;
